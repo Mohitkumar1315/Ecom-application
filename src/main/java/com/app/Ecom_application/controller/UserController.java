@@ -3,23 +3,28 @@ package com.app.Ecom_application.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.Ecom_application.Enities.User;
+import com.app.Ecom_application.Services.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 
 @RestController
 public class UserController 
 {
+   @Autowired
+   private UserService userService;
    List<User> userList = new ArrayList<>();
 
     @GetMapping("test")
@@ -28,24 +33,23 @@ public class UserController
     }
     
     @GetMapping("ecom-users")
-    public List<User> getUser()
+    public ResponseEntity<List<User>> getUser()
     {
-       
-        return  userList;
+        return ResponseEntity.ok(userService.featchUsers());
     }
-    // @PostMapping("path")
-    // public ResponseEntity CreateUser (@RequestBody String entity) {
-        
-    //   User user=new User();
-    //   user.setFirst("Mohit");
-    //   user.setLast("Kabir");
-    //     return ResponseEntity.status(HttpStatus.OK).body(user);
-    // }
-    @PostMapping("create/user")
-    public List<User> CreateUser (@RequestBody User user) {
-        System.out.println("User is :"+user);
-         userList.add(user);
-         return userList;
-      
+    @GetMapping("ecom-user/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Long id ) 
+    {
+     return  userService.getUserById(id).map(ResponseEntity::ok)
+     .orElse(ResponseEntity.notFound().build());
+    }
+    
+   @PostMapping("create/user")
+    public ResponseEntity<String> createUser(@RequestBody User user)
+    {
+       return Optional.ofNullable(userService.createUser(user))
+       .map(saveduser->ResponseEntity.ok("User created Successfully"))
+       .orElseGet(()->ResponseEntity.badRequest().body("User unable to create"));
+
     }
 }
