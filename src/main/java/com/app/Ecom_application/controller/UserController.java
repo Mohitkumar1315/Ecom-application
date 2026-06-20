@@ -11,11 +11,14 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 
@@ -51,5 +54,19 @@ public class UserController
        .map(saveduser->ResponseEntity.ok("User created Successfully"))
        .orElseGet(()->ResponseEntity.badRequest().body("User unable to create"));
 
+    }
+    @PutMapping("ecom-user_update/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable  Long  id, @RequestBody User updatedUserDetails) 
+    {
+       return userService.updatedUser(updatedUserDetails, id)
+       .map(ResponseEntity::ok)
+       .orElse(ResponseEntity.notFound().build());
+    }
+    @DeleteMapping("/ecomUser-remove/{id}")
+     public ResponseEntity<Void> deleteUser(@PathVariable Long id)
+    {
+          return userService.deleteUser(id)
+            .map(user -> ResponseEntity.noContent().<Void>build())
+            .orElse(ResponseEntity.notFound().build());
     }
 }

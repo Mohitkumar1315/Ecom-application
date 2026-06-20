@@ -28,4 +28,26 @@ public class UserService
         userList.add(user);
         return   userList;
    }
+   public Optional<User> updatedUser(User updatedUserDetails, Long id)
+   {
+      return userList.stream()
+            .filter(user -> user.getId().equals(id))
+            .findFirst()
+            .map(existingUser -> {
+
+                existingUser.setFirstName(updatedUserDetails.getFirstName());
+                existingUser.setLastName(updatedUserDetails.getLastName());
+
+                return existingUser;
+            });
+
+   }
+   public Optional<User> deleteUser(Long Id)
+   {
+      return getUserById(Id)
+      .map(user->{
+         userList.remove(user);
+         return user;
+      }); 
+   }
 }
