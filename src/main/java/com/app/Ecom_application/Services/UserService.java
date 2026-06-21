@@ -7,47 +7,40 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.app.Ecom_application.Enities.User;
+import com.app.Ecom_application.Repositories.UserRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class UserService 
 {
-    List<User> userList=new ArrayList<>();
-    private Long userid= 1L;
+   private final UserRepository userRepo;
    public List<User> featchUsers()
    {
-     return  userList;      
+     return  userRepo.findAll(); 
    }
    public Optional<User> getUserById(Long id)
    {
-      return userList.stream()
-      .filter(user->user.getId().equals(id)).findFirst();
+      return userRepo.findById(id);
    }
-   public List<User> createUser(User user)
+   public User   createUser(User user)
    {  
-        user.setId(userid++);
-        userList.add(user);
-        return   userList;
+      return  userRepo.save(user);
    }
    public Optional<User> updatedUser(User updatedUserDetails, Long id)
    {
-      return userList.stream()
-            .filter(user -> user.getId().equals(id))
-            .findFirst()
-            .map(existingUser -> {
-
-                existingUser.setFirstName(updatedUserDetails.getFirstName());
-                existingUser.setLastName(updatedUserDetails.getLastName());
-
-                return existingUser;
-            });
+        return  userRepo.findById(id)
+         .map(existingUser->{
+            existingUser.setFirstName(updatedUserDetails.getFirstName());
+            existingUser.setLastName(updatedUserDetails.getLastName());
+            System.out.println(existingUser.toString());
+            return existingUser;
+         });  
 
    }
-   public Optional<User> deleteUser(Long Id)
+   public void  deleteUser(Long Id)
    {
-      return getUserById(Id)
-      .map(user->{
-         userList.remove(user);
-         return user;
-      }); 
+       userRepo.deleteById(Id); 
    }
 }

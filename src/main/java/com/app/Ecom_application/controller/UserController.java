@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.app.Ecom_application.Enities.User;
 import com.app.Ecom_application.Services.UserService;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,10 +26,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 
 @RestController
+@RequiredArgsConstructor
 public class UserController 
 {
-   @Autowired
-   private UserService userService;
+
+   private final  UserService userService;
    List<User> userList = new ArrayList<>();
 
     @GetMapping("test")
@@ -65,8 +68,8 @@ public class UserController
     @DeleteMapping("/ecomUser-remove/{id}")
      public ResponseEntity<Void> deleteUser(@PathVariable Long id)
     {
-          return userService.deleteUser(id)
-            .map(user -> ResponseEntity.noContent().<Void>build())
-            .orElse(ResponseEntity.notFound().build());
+          
+          userService.deleteUser(id); 
+          return  ResponseEntity.noContent().build(); 
     }
 }
