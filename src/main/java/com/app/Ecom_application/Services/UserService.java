@@ -1,6 +1,4 @@
 package com.app.Ecom_application.Services;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,7 +32,7 @@ public class UserService
          .map(existingUser->{
             existingUser.setFirstName(updatedUserDetails.getFirstName());
             existingUser.setLastName(updatedUserDetails.getLastName());
-            System.out.println(existingUser.toString());
+            userRepo.save(existingUser);
             return existingUser;
          });  
 
