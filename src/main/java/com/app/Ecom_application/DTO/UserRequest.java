@@ -1,4 +1,6 @@
 package com.app.Ecom_application.DTO;
+import com.app.Ecom_application.Enities.Address;
+
 import lombok.Data;
 @Data
 public class UserRequest
@@ -7,5 +9,5 @@ public class UserRequest
  private String lastName ;
  private String mail;
  private String phone;
- private AddressDTO addressDTO;
+ private Address address;
 }

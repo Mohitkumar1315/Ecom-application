@@ -2,6 +2,7 @@ package com.app.Ecom_application.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.app.Ecom_application.DTO.UserRequest;
 import com.app.Ecom_application.DTO.UserResponse;
 import com.app.Ecom_application.Enities.User;
 import com.app.Ecom_application.Services.UserService;
@@ -46,17 +47,17 @@ public class UserController
     }
     
    @PostMapping("create/user")
-    public ResponseEntity<String> createUser(@RequestBody User user)
+    public ResponseEntity<String> createUser(@RequestBody UserRequest userRequest)
     {
-       return Optional.ofNullable(userService.createUser(user))
+       return Optional.ofNullable(userService.createUser(userRequest))
        .map(saveduser->ResponseEntity.ok("User created Successfully"))
        .orElseGet(()->ResponseEntity.badRequest().body("User unable to create"));
 
     }
     @PutMapping("ecom-user_update/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable  Long  id, @RequestBody User updatedUserDetails) 
+    public ResponseEntity<User> updateUser(@PathVariable  Long  id, @RequestBody UserRequest updateUserRequest) 
     {
-       return userService.updatedUser(updatedUserDetails, id)
+       return userService.updatedUser(updateUserRequest, id)
        .map(ResponseEntity::ok)
        .orElse(ResponseEntity.notFound().build());
     }

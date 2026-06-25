@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.app.Ecom_application.DTO.AddressDTO;
+import com.app.Ecom_application.DTO.UserRequest;
 import com.app.Ecom_application.DTO.UserResponse;
 import com.app.Ecom_application.Enities.Address;
 import com.app.Ecom_application.Enities.User;
@@ -27,16 +28,17 @@ public class UserService
    {
       return userRepo.findById(id);
    }
-   public User   createUser(User user)
+   public User   createUser(UserRequest userRequest)
    {  
-      return  userRepo.save(user);
+        User user= new User();
+        updateUserFromRequest(user,userRequest); 
+       return  userRepo.save(user);
    }
-   public Optional<User> updatedUser(User updatedUserDetails, Long id)
+   public Optional<User> updatedUser(UserRequest updatUserRequest, Long id)
    {
         return  userRepo.findById(id)
          .map(existingUser->{
-            existingUser.setFirstName(updatedUserDetails.getFirstName());
-            existingUser.setLastName(updatedUserDetails.getLastName());
+             updateUserFromRequest(existingUser, updatUserRequest);
             userRepo.save(existingUser);
             return existingUser;
          });  
@@ -68,5 +70,24 @@ public class UserService
             });
       
       return userResponses;
+   }
+   private void  updateUserFromRequest(User user, UserRequest userRequest)
+   {
+      user.setFirstName(userRequest.getFirstName());
+      user.setLastName(userRequest.getLastName());
+      user.setMail(userRequest.getMail());
+      user.setPhone(userRequest.getPhone());
+      Optional.ofNullable(userRequest.getAddress())
+            .ifPresent(address -> {
+                Address add=new Address();
+                add.setCity(address.getCity());
+                add.setCountry(address.getCountry());
+                add.setDistrict(address.getDistrict());
+                add.setStreat(address.getStreat());
+                add.setZipCode(address.getZipCode());
+
+                user.setAddress(add);
+            });
+
    }
 }
