@@ -8,7 +8,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import com.app.Ecom_application.Helper.UserRoleConstants;
 
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
