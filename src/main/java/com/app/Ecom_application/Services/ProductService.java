@@ -1,17 +1,16 @@
 package com.app.Ecom_application.Services;
-import com.app.Ecom_application.Repositories.UserRepository;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import com.app.Ecom_application.DTO.ProductRequest;
-import com.app.Ecom_application.DTO.ProductResponse;
 import com.app.Ecom_application.Enities.Product;
 import com.app.Ecom_application.Repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
-@Service
 @RequiredArgsConstructor
+@Service
 public class ProductService 
 {
    // if we are user RequiredArgsConstructor than we need to create our variable/objects as final
@@ -26,7 +25,7 @@ public class ProductService
   }
   public List<Product> fetchProduct()
   {
-        return  productRepository.findAll().stream()
+        return  productRepository.findAll().stream()   //findAll kabhi null value resturns nahi karta ye return karta hia null or []
         .map(this::mapProductResponse).collect(Collectors.toList());
   }
   public Optional<Product> updateProduct(Long id, ProductRequest productRequest)

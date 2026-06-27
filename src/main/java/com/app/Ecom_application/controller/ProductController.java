@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
-
-
 @RestController
 @RequestMapping("/ecom")
 public class ProductController 
@@ -36,13 +34,13 @@ public class ProductController
             ResponseEntity.ok().body("Product creted successfully")
          ).orElse(ResponseEntity.internalServerError().body("Please check request"));
      }
-     @GetMapping("/products")
-     public ResponseEntity<List<Product>> getProducts() 
+    @GetMapping("/products")
+     public ResponseEntity<List<Product>> getProducts()
      {
-        return Optional.ofNullable(productService.fetchProduct())
-        .filter(products->!products.isEmpty())
-        .map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-     }
+         return Optional.of(productService.fetchProduct())
+         .filter(products->!products.isEmpty())
+         .map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+      }
      @GetMapping("/product/{id}")
      public ResponseEntity<Product> getMethodName(@PathVariable Long id) 
      {
