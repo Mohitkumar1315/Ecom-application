@@ -1,13 +1,16 @@
 package com.app.Ecom_application.controller;
 import com.app.Ecom_application.Services.ProductService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.app.Ecom_application.DTO.ProductRequest;
+import com.app.Ecom_application.DTO.ProductResponse;
 import com.app.Ecom_application.Enities.Product;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,11 +19,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/ecom")
 public class ProductController 
 {
-   @Autowired
-    private ProductService productService;     
+    private final  ProductService productService;     
     @RequestMapping(value = "/Product-test", method=RequestMethod.GET)
      public String requestMethodName() 
      {
@@ -59,6 +62,23 @@ public class ProductController
      public ResponseEntity<String> removeProduct(@PathVariable Long id )
      {
            productService.deleteProduct(id);
-            return  ResponseEntity.noContent().build();;
-     }      
+            return  ResponseEntity.noContent().build();
+     }   
+     @GetMapping("/findActiveProducts")
+     public ResponseEntity<List<ProductResponse>> getAllActiveProduct() 
+     {         
+             return Optional.ofNullable(productService.getActiveProduct())
+            .filter(products -> !products.isEmpty())
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
+     }
+
+    /// serch product through keywords
+    /// 
+    @RequestMapping("/serchProduct")
+    public List<ProductResponse> searchProduct(@RequestParam String keyword)
+    {
+        return productService.serchProduct(keyword);
+        
+    }
 }

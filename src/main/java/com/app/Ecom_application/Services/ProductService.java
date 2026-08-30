@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import com.app.Ecom_application.DTO.ProductRequest;
+import com.app.Ecom_application.DTO.ProductResponse;
 import com.app.Ecom_application.Enities.Product;
 import com.app.Ecom_application.Repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +26,14 @@ public class ProductService
   }
   public List<Product> fetchProduct()
   {
-        return  productRepository.findAll().stream()   //findAll kabhi null value resturns nahi karta ye return karta hia null or []
-        .map(this::mapProductResponse).collect(Collectors.toList());
+         return  productRepository.findAll();   //findAll kabhi null value resturns nahi karta ye return karta hia null or []
+        // .map(this::mapProductResponse).collect(Collectors.toList());
+  }
+  public List<ProductResponse> getActiveProduct()
+  {
+     return productRepository.findByisActiveTrue()
+     .stream().map(this::mapProductResponse).collect(Collectors.toList());
+
   }
   public Optional<Product> updateProduct(Long id, ProductRequest productRequest)
   {
@@ -52,17 +59,23 @@ public class ProductService
   {
     productRepository.deleteById(id);
   }
-  private Product mapProductResponse(Product responseproduct)
+  public List<ProductResponse> serchProduct(String keyword)
   {
-        Product product=new Product();
+    System.out.println("We are in the service of Product for the customer search");
+    return productRepository.serachProducts(keyword).stream()
+    .map(this::mapProductResponse).collect(Collectors.toList());
+       
+  }
+  private ProductResponse mapProductResponse(Product responseproduct)
+  {
+        ProductResponse product=new ProductResponse();
         product.setName(responseproduct.getName());
         product.setCategory(responseproduct.getCategory());
-        product.setCreatedTime(responseproduct.getCreatedTime());
-        product.setUpDateTime(responseproduct.getUpDateTime());
         product.setId(responseproduct.getId());
         product.setDescription(responseproduct.getDescription());
         product.setImageUrl(responseproduct.getImageUrl());
         product.setActive(responseproduct.isActive());
         return product;
   }
+  
 }
